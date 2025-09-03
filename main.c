@@ -1,17 +1,78 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
 
 char* filePath = "C:\\Users\\Gabriel\\desktop\\notes.txt";
 FILE* fptr;
 
 void setKeyValuePair(const char* key, const char* value);
-char* getKeyValue(const char* key);
+char* getKeyValue(const char* searchKey);
+void showNotes();
+bool keyIsAvailable(const char* searchKey);
+void printHeader();
 
 int main(void){
+    printHeader();
+    showNotes();
+}
+
+void printHeader(){
     printf("Welcome to Notes CLI!\n");
-    setKeyValuePair("1", "add sound effects to Jufofu promo video");
-    char* result = getKeyValue("1");
-    printf("%s\n", result);
+    printf("\n");
+}
+
+bool keyIsAvailable(const char* searchKey){
+    fptr = fopen(filePath, "r");
+
+    if(fptr == NULL){
+        printf("Error while attempting to open the file.\n");
+        return false;
+    }
+
+    char line[256];
+
+    while(fgets(line, sizeof(line), fptr)){
+        char* key;
+        key = strtok(line, "=");
+
+        if(strcmp(key, searchKey) == 0){
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void showNotes(){
+    fptr = fopen(filePath, "r");
+
+    if(fptr == NULL){
+        printf("Error while attempting to open the file.\n");
+        return;
+    }
+
+    char line[256];
+
+    while(fgets(line, sizeof(line), fptr)){
+        char* ptr = &line[0];
+        memmove(ptr + 1, ptr, strlen(ptr) + 1);
+
+        ptr[0] = '[';
+        ptr = strchr(line, '=');
+
+        if(ptr != NULL){
+            memmove(ptr + 2, ptr + 1, strlen(ptr) + 1);
+
+            ptr[0] = ']';
+            ptr[1] = ' ';
+            ptr[2] = toupper(ptr[2]);
+        }
+        
+        printf("%s", line);
+    }
+
+    fclose(fptr);
 }
 
 void setKeyValuePair(const char* key, const char* value){
@@ -36,6 +97,7 @@ char* getKeyValue(const char* searchKey){
 
     char line[256];
 
+     
 
     while(fgets(line, sizeof(line), fptr)){
         char* key = strtok(line, "=");
@@ -50,3 +112,4 @@ char* getKeyValue(const char* searchKey){
 
     fclose(fptr);
 };
+
