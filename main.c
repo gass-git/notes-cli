@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <windows.h>
 
 char* filePath = "C:\\Users\\Gabriel\\desktop\\notes.txt";
 FILE* fptr;
@@ -11,6 +12,7 @@ char* getKeyValue(const char* searchKey);
 void showNotes();
 bool keyIsAvailable(const char* searchKey);
 void printHeader();
+void printColored(const char *text, int color);
 
 int main(void){
     printHeader();
@@ -23,9 +25,22 @@ void printHeader(){
     printf("\n");
     printf("Welcome ");
     printf("to ");
-    printf("\033[1;32mNotes CLI\033[0m");
+    printColored("Notes CLI", FOREGROUND_GREEN | FOREGROUND_INTENSITY);
     printf("!\n");
     printf("\n");
+}
+
+void printColored(const char *text, int color) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    WORD saved_attributes = consoleInfo.wAttributes;
+
+    SetConsoleTextAttribute(hConsole, color);
+    printf("%s", text);
+
+    SetConsoleTextAttribute(hConsole, saved_attributes);
 }
 
 bool keyIsAvailable(const char* searchKey){
