@@ -15,10 +15,16 @@ void printHeader();
 int main(void){
     printHeader();
     showNotes();
+    printf("\n");
+    printf("\n");
 }
 
 void printHeader(){
-    printf("Welcome to Notes CLI!\n");
+    printf("\n");
+    printf("Welcome ");
+    printf("to ");
+    printf("\033[1;32mNotes CLI\033[0m");
+    printf("!\n");
     printf("\n");
 }
 
