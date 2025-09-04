@@ -11,23 +11,68 @@ void setKeyValuePair(const char* key, const char* value);
 char* getKeyValue(const char* searchKey);
 void showNotes();
 bool keyIsAvailable(const char* searchKey);
-void printHeader();
 void printColored(const char *text, int color);
+void printWelcomeInfo();
+void addNote(const char* note);
+int getNumberOfNotes();
 
-int main(void){
-    printHeader();
-    showNotes();
-    printf("\n");
-    printf("\n");
+
+int main(int argc, char *argv[]){
+    if(argc < 2){
+        printWelcomeInfo();
+    }
+    else if(strcmp(argv[1], "show") == 0){
+        showNotes();
+    }
+
+    else if(strcmp(argv[1], "add") == 0){
+        if (argv[2] == NULL){
+            printf("Error! No input found to be added.");
+        }
+        else{
+            addNote(argv[2]);
+        }
+        
+    }
 }
 
-void printHeader(){
+int getNumberOfNotes(){
+    fptr = fopen(filePath, "r");
+
+    if(fptr == NULL){
+        printf("Error while attempting to open the file.\n");
+        return 0;
+    }
+
+    char ch;
+    int notes = 1;
+
+    while((ch = fgetc(fptr)) != EOF){
+        if(ch == '\n'){
+            notes++;
+        }
+    }
+
+    return notes;
+}
+
+void addNote(const char* note){
+    int nextNumber = getNumberOfNotes();
+    char nextNumberAsString[20];
+    sprintf(nextNumberAsString, "%d", nextNumber);
+
+    setKeyValuePair(nextNumberAsString, note);
+}
+
+void printWelcomeInfo(){
     printf("\n");
     printf("Welcome ");
     printf("to ");
     printColored("Notes CLI", FOREGROUND_GREEN | FOREGROUND_INTENSITY);
     printf("!\n");
     printf("\n");
+    printColored("Commands: ", FOREGROUND_BLUE| FOREGROUND_INTENSITY);
+    printf("show, add, delete\n");
 }
 
 void printColored(const char *text, int color) {
@@ -66,6 +111,7 @@ bool keyIsAvailable(const char* searchKey){
 }
 
 void showNotes(){
+    printf("\n");
     fptr = fopen(filePath, "r");
 
     if(fptr == NULL){
@@ -92,9 +138,11 @@ void showNotes(){
         
         printf("%s", line);
     }
-
+    printf("\n");
     fclose(fptr);
 }
+
+
 
 void setKeyValuePair(const char* key, const char* value){
     fptr = fopen(filePath, "a");
@@ -117,8 +165,6 @@ char* getKeyValue(const char* searchKey){
     }
 
     char line[256];
-
-     
 
     while(fgets(line, sizeof(line), fptr)){
         char* key = strtok(line, "=");
