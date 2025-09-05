@@ -1,21 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include <ctype.h>
 #include <windows.h>
 
 char* filePath = "C:\\Users\\Gabriel\\desktop\\notes.txt";
 FILE* fptr;
 
-void setKeyValuePair(const char* key, const char* value);
-char* getKeyValue(const char* searchKey);
 void showNotes();
-bool keyIsAvailable(const char* searchKey);
 void printColored(const char *text, int color);
 void printWelcomeInfo();
-void addNote(const char* note);
-int getNumberOfNotes();
-
+void storeNoteInFile(const char* note);
+void deleteStoredNote(char *noteNumber);
 
 int main(int argc, char *argv[]){
     if(argc < 2){
@@ -24,44 +19,25 @@ int main(int argc, char *argv[]){
     else if(strcmp(argv[1], "show") == 0){
         showNotes();
     }
-
     else if(strcmp(argv[1], "add") == 0){
-        if (argv[2] == NULL){
+        if(argv[2] == NULL){
             printf("Error! No input found to be added.");
+            return 0;
         }
         else{
-            addNote(argv[2]);
+            storeNoteInFile(argv[2]);
         }
-        
     }
-}
-
-int getNumberOfNotes(){
-    fptr = fopen(filePath, "r");
-
-    if(fptr == NULL){
-        printf("Error while attempting to open the file.\n");
-        return 0;
-    }
-
-    char ch;
-    int notes = 1;
-
-    while((ch = fgetc(fptr)) != EOF){
-        if(ch == '\n'){
-            notes++;
+    else if(strcmp(argv[1], "delete") == 0){
+        if(argv[2] == NULL){
+            printf("Error! Please specify the number of the note as second argument.");
+            return 0;
+        }
+        else{
+            deleteStoredNote(argv[2]);
         }
     }
 
-    return notes;
-}
-
-void addNote(const char* note){
-    int nextNumber = getNumberOfNotes();
-    char nextNumberAsString[20];
-    sprintf(nextNumberAsString, "%d", nextNumber);
-
-    setKeyValuePair(nextNumberAsString, note);
 }
 
 void printWelcomeInfo(){
@@ -88,28 +64,6 @@ void printColored(const char *text, int color) {
     SetConsoleTextAttribute(hConsole, saved_attributes);
 }
 
-bool keyIsAvailable(const char* searchKey){
-    fptr = fopen(filePath, "r");
-
-    if(fptr == NULL){
-        printf("Error while attempting to open the file.\n");
-        return false;
-    }
-
-    char line[256];
-
-    while(fgets(line, sizeof(line), fptr)){
-        char* key;
-        key = strtok(line, "=");
-
-        if(strcmp(key, searchKey) == 0){
-            return false;
-        }
-    }
-
-    return true;
-}
-
 void showNotes(){
     printf("\n");
     fptr = fopen(filePath, "r");
@@ -119,32 +73,23 @@ void showNotes(){
         return;
     }
 
-    char line[256];
+    char noteInLine[256];
+    int i = 0;
 
-    while(fgets(line, sizeof(line), fptr)){
-        char* ptr = &line[0];
-        memmove(ptr + 1, ptr, strlen(ptr) + 1);
-
-        ptr[0] = '[';
-        ptr = strchr(line, '=');
-
-        if(ptr != NULL){
-            memmove(ptr + 2, ptr + 1, strlen(ptr) + 1);
-
-            ptr[0] = ']';
-            ptr[1] = ' ';
-            ptr[2] = toupper(ptr[2]);
-        }
+    while(fgets(noteInLine, sizeof(noteInLine), fptr)){
+        i++;
+        char noteNumber[8];
+        sprintf(noteNumber, "[%d]", i);
         
-        printf("%s", line);
+        char result[300];
+        sprintf(result, "%s %s", noteNumber, noteInLine);
+        
+        printf("%s", result);
     }
-    printf("\n");
     fclose(fptr);
 }
 
-
-
-void setKeyValuePair(const char* key, const char* value){
+void storeNoteInFile(const char* note){
     fptr = fopen(filePath, "a");
 
     if(fptr == NULL){
@@ -152,31 +97,44 @@ void setKeyValuePair(const char* key, const char* value){
         return;
     }
 
-    fprintf(fptr, "%s=%s\n", key, value); 
+    fprintf(fptr, "%s\n", note); 
     fclose(fptr);
 }
 
-char* getKeyValue(const char* searchKey){
+void deleteStoredNote(char* noteNumber){
     fptr = fopen(filePath, "r");
+    int n = atoi(noteNumber);
 
-    if(fptr == NULL){
-        printf("Error while attempting to open the file.\n");
-        return NULL;
+    FILE *temp = fopen("temp_notes.txt", "w");
+    if(temp == NULL){
+        printf("Error opening temporary file.\n");
+        fclose(temp);
+        return;
     }
 
-    char line[256];
+    char line[300];
+    int count = 1;
+    bool deleted = false;
 
     while(fgets(line, sizeof(line), fptr)){
-        char* key = strtok(line, "=");
-        char* value = strtok(NULL, "=");
-
-        if(strcmp(key, searchKey) == 0){
-            char* val = strdup(value);
-            fclose(fptr);
-            return val;
+        if(count != n){
+            fputs(line, temp);
         }
+        else{
+            deleted = true;
+        }
+        count++;
     }
 
     fclose(fptr);
-};
+    fclose(temp);
 
+    if(deleted){
+        remove(filePath);
+        rename("temp_notes.txt", filePath);
+    }
+    else{
+        remove("temp_notes.txt");
+        printf("Error! Note number not found.");
+    }
+}
