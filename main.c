@@ -3,8 +3,7 @@
 #include <stdbool.h>
 #include <windows.h>
 
-char* filePath = "C:\\Users\\Gabriel\\desktop\\notes.txt";
-FILE* fptr;
+const char* filePath = "C:\\Users\\Gabriel\\desktop\\notes.txt";
 
 void showNotes();
 void printColored(const char *text, int color);
@@ -66,7 +65,7 @@ void printColored(const char *text, int color) {
 
 void showNotes(){
     printf("\n");
-    fptr = fopen(filePath, "r");
+    FILE* fptr = fopen(filePath, "r");
 
     if(fptr == NULL){
         printf("Error while attempting to open the file.\n");
@@ -79,10 +78,10 @@ void showNotes(){
     while(fgets(noteInLine, sizeof(noteInLine), fptr)){
         i++;
         char noteNumber[8];
-        sprintf(noteNumber, "[%d]", i);
+        snprintf(noteNumber, "[%d]", i);
         
         char result[300];
-        sprintf(result, "%s %s", noteNumber, noteInLine);
+        snprintf(result, "%s %s", noteNumber, noteInLine);
         
         printf("%s", result);
     }
@@ -90,7 +89,7 @@ void showNotes(){
 }
 
 void storeNoteInFile(const char* note){
-    fptr = fopen(filePath, "a");
+    FILE* fptr = fopen(filePath, "a");
 
     if(fptr == NULL){
         printf("Error while attempting to open the file.\n");
@@ -102,7 +101,7 @@ void storeNoteInFile(const char* note){
 }
 
 void deleteStoredNote(char* noteNumber){
-    fptr = fopen(filePath, "r");
+    FILE* fptr = fopen(filePath, "r");
     int n = atoi(noteNumber);
 
     FILE *temp = fopen("temp_notes.txt", "w");
@@ -132,6 +131,7 @@ void deleteStoredNote(char* noteNumber){
     if(deleted){
         remove(filePath);
         rename("temp_notes.txt", filePath);
+
     }
     else{
         remove("temp_notes.txt");
