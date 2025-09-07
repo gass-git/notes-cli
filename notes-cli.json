@@ -4,7 +4,7 @@
     "description": "A simple command-line tool to manage and keep track of your notes.",
     "homepage": "https://github.com/gass-git/notes-cli",
     "license": "https://spdx.org/licenses/FTL.html",
-    "hash": "95ca9f79e2d9e0139ba5c5ae8c8de8ba876db66b71a078bd09fb0d9abe586061",
+    "hash": "8ad13824a4208d4d5db5aa447a7b3344d1cecda7a0c4948564060da181f6f81c",
     "post_install": [
         "# Create a directory to store data",
         "$path = Join-Path $env:APPDATA 'notes-cli'",
