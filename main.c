@@ -3,15 +3,18 @@
 #include <stdbool.h>
 #include <windows.h>
 
-const char* filePath = "C:\\Users\\Gabriel\\desktop\\notes.txt";
+char filePath[1024];
 
 void showNotes();
 void printColored(const char *text, int color);
 void printWelcomeInfo();
 void storeNoteInFile(const char* note);
 void deleteStoredNote(char *noteNumber);
+void setFilePath(); 
 
 int main(int argc, char *argv[]){
+    setFilePath();
+
     if(argc < 2){
         printWelcomeInfo();
     }
@@ -37,6 +40,17 @@ int main(int argc, char *argv[]){
         }
     }
 
+}
+
+void setFilePath(){
+    char* appDataPath = getenv("APPDATA");
+
+    if(appDataPath == NULL){
+        printf("Error! env variable APPDATA not found!");
+        return;
+    }
+
+    snprintf(filePath, sizeof(filePath), "%s\\notes-cli\\notes.txt", appDataPath);
 }
 
 void printWelcomeInfo(){
@@ -78,10 +92,10 @@ void showNotes(){
     while(fgets(noteInLine, sizeof(noteInLine), fptr)){
         i++;
         char noteNumber[8];
-        snprintf(noteNumber, "[%d]", i);
+        snprintf(noteNumber, sizeof(noteNumber), "[%d]", i);
         
         char result[300];
-        snprintf(result, "%s %s", noteNumber, noteInLine);
+        snprintf(result, sizeof(result),"%s %s", noteNumber, noteInLine);
         
         printf("%s", result);
     }

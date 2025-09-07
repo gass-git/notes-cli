@@ -1,11 +1,14 @@
 {
-    "version": "1.0.0",
-    "url": "https://github.com/gass-git/notes-cli/releases/download/v1.0.0/notes-cli.exe",
+    "version": "1.0.1",
+    "url": "https://github.com/gass-git/notes-cli/releases/download/v1.0.1/notes-cli.exe",
     "description": "A simple command-line tool to manage and keep track of your notes.",
     "homepage": "https://github.com/gass-git/notes-cli",
     "license": "https://spdx.org/licenses/FTL.html",
     "hash": "95ca9f79e2d9e0139ba5c5ae8c8de8ba876db66b71a078bd09fb0d9abe586061",
     "post_install": [
+        "# Create a directory to store data",
+        "$path = Join-Path $env:APPDATA 'notes-cli'",
+        "if (-not (Test-Path $path)){New-Item -ItemType Directory -Path $path | Out-Null}",
         "Write-Host 'Do you want notes-cli to open in a cmd window automatically after boot? (Y/N)' -ForegroundColor Yellow",
         "$answer = Read-Host",
         "if ($answer -match '^(Y|y)') {",
