@@ -23,5 +23,14 @@
         "  Write-Host 'Shortcut created in Startup!' -ForegroundColor Green",
         "}"
     ],
+    "post_uninstall": [
+        "# Removes notes-cli.lnk startup shortcut if it exists",
+        "$startupPath = \"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\"",
+        "$shortcutPath = Join-Path $startupPath 'notes-cli.lnk'",
+        "if (Test-Path $shortcutPath){",
+        "   Remove-Item $shortcutPath -Force",
+        "   Write-Host 'notes-cli automatic open on boot has been disabled' -ForegroundColor Green",
+        "}"
+    ],
     "bin": "notes-cli.exe"
 }
