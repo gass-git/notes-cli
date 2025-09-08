@@ -93,11 +93,8 @@ void showNotes(){
         i++;
         char noteNumber[8];
         snprintf(noteNumber, sizeof(noteNumber), "[%d]", i);
-        
-        char result[300];
-        snprintf(result, sizeof(result),"%s %s", noteNumber, noteInLine);
-        
-        printf("%s", result);
+        printColored(noteNumber, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+        printf(" %s", noteInLine);
     }
     fclose(fptr);
 }
