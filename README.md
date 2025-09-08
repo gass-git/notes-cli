@@ -1,4 +1,4 @@
-# notes-cli
+# Notes CLI
 
 Keep track of your notes in the CLI 
 
