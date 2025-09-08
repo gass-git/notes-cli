@@ -1,4 +1,4 @@
-# notes-cli
+# Notes CLI
 
 Keep track of your notes in the CLI 
 
@@ -16,7 +16,7 @@ Note: during installation, you can optionally set it to start automatically when
 
 ## Commands
 
-View all your notes
+View all your notes:
 ```sh
 notes-cli show
 ```
