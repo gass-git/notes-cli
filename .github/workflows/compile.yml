@@ -1,0 +1,28 @@
+name: compile
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout source
+        uses: actions/checkout@4
+
+      - name: install compilation dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essentials
+
+      - name: compile
+        run: |
+          mkdir -p build
+          gcc main.c -o build/notes-cli src/*.c
+
+      - name: upload artifact
+        uses: actions/upload-artifact@4
+        with:
+          name: notes-cli
+          path: build/notes-cli
