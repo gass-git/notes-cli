@@ -1,0 +1,49 @@
+on:
+  workflow_run:
+    workflows: ["release"]
+    types:
+      - completed
+
+jobs:
+  scoop_update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout scoop bucket
+        uses: actions/checkout@v4
+        with:
+          repository: gass-git/notes-cli
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: gass-git/notes-cli
+
+      - name: download release artifact
+        run: |
+          curl -L -o notes-cli \
+          https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/notes-cli
+
+      - name: calculate SHA256 hash
+        id: hash
+        run: |
+          HASH=$(sha256sum notes-cli | awk '{print $1}')
+          echo "hash=$HASH" >> $GITHUB_OUTPUT
+
+      - name: update scoop manifest
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          URL="https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/notes-cli"
+          jq --arg ver "$VERSION" \
+             --arg url "$URL" \
+             --arg hash "${{ steps.hash.outputs.hash }}" \
+             '.version=$ver | .url=$url | .hash=$hash' \
+             scoop-bucket/notes-cli.json > scoop-bucket/notes-cli.json.tmp
+          mv scoop-bucket/notes-cli.json.tmp scoop-bucket/notes-cli.json
+
+      - name: commit and push manifest
+        run: |
+          cd scoop-bucket
+          git config user.name "gass-git"
+          git config user.email "g.szada@gmail.com"
+          git add notes-cli.json
+          git commit -m "chore: updates scoop manifest for version ${GITHUB_REF_NAME#v}"
+          git push
+  
