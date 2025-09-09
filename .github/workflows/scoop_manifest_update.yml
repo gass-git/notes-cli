@@ -1,3 +1,5 @@
+name: manifest_update
+
 on:
   workflow_run:
     workflows: ["release"]
