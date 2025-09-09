@@ -2,7 +2,7 @@ name: release
 
 on:
   workflow_run:
-    workflows: ["compile"]
+    workflows: ["build"]
     types:
       - completed
 
