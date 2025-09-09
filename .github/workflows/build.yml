@@ -10,19 +10,23 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: install build dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential
+      - name: Install MinGW (gcc for Windows)
+        run: choco install mingw -y
 
-      - name: build
+      - name: Add MinGW to PATH
+        run: echo "C:\tools\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Build
         run: |
-          mkdir -p build
-          gcc main.c -o build/notes-cli
+          mkdir build
+          gcc main.c -o build/notes-cli.exe
 
-      - name: upload artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: notes-cli
-          path: build/notes-cli
+          path: build/notes-cli.exe
+
