@@ -24,9 +24,3 @@ jobs:
           mkdir build
           gcc main.c -o build/notes-cli.exe
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: notes-cli
-          path: build/notes-cli.exe
-

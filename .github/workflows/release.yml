@@ -14,7 +14,7 @@ jobs:
       - name: checkout source
         uses: actions/checkout@v4
 
-      - name: download build artifact
+      - name: download build artifact from workflow job
         uses: actions/download-artifact@v4
         with:
           name: notes-cli
@@ -23,6 +23,7 @@ jobs:
       - name: create github release
         uses: softprops/action-gh-release@v2
         with:
-          files: ./dist/notes-cli.exe
+          tag_name: ${{ github.event.workflow_run.head_branch }}
+          files: build/notes-cli.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
