@@ -15,14 +15,14 @@ jobs:
         uses: actions/checkout@4
 
       - name: download build artifact
-        uses: actions/download-artifact@4
+        uses: actions/download-artifact@v4
         with:
           name: notes-cli
           path: ./dist
 
       - name: create github release
-        uses: softprops/action-gh-release@2
+        uses: softprops/action-gh-release@v2
         with:
-          files: ./dist/notes-cli
+          files: ./dist/notes-cli.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
