@@ -36,7 +36,8 @@ jobs:
 
       - name: update scoop manifest
         run: |
-          VERSION="${{ steps.tag.outputs.tag#v }}"
+          TAG="${{ steps.tag.outputs.tag }}"
+          VERSION="${TAG#v}"
           URL="https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/notes-cli"
           jq --arg ver "$VERSION" \
              --arg url "$URL" \
