@@ -12,13 +12,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout scoop bucket
+      - name: checkout repository
         uses: actions/checkout@v4
+
+      - name: get release tag
+        id: tag
+        run: |
+          tag=$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name)
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: download release artifact
         run: |
           curl -L -o notes-cli \
-          https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/notes-cli
+          https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/notes-cli
 
       - name: calculate SHA256 hash
         id: hash
@@ -28,8 +36,8 @@ jobs:
 
       - name: update scoop manifest
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          URL="https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/notes-cli"
+          VERSION="${{ steps.tag.outputs.tag#v }}"
+          URL="https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/notes-cli"
           jq --arg ver "$VERSION" \
              --arg url "$URL" \
              --arg hash "${{ steps.hash.outputs.hash }}" \
@@ -42,6 +50,6 @@ jobs:
           git config user.name "gass-git"
           git config user.email "g.szada@gmail.com"
           git add notes-cli.json
-          git commit -m "chore: updates scoop manifest for version ${GITHUB_REF_NAME#v}"
+          git commit -m "chore: updates scoop manifest for version ${{steps.tag.outputs.tag}}"
           git push
   
