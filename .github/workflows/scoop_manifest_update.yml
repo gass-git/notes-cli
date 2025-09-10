@@ -1,4 +1,4 @@
-name: manifest_update
+name: manifest-update
 
 on:
   workflow_run:
@@ -14,10 +14,6 @@ jobs:
     steps:
       - name: checkout scoop bucket
         uses: actions/checkout@v4
-        with:
-          repository: gass-git/notes-cli
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: gass-git/notes-cli
 
       - name: download release artifact
         run: |
@@ -38,12 +34,11 @@ jobs:
              --arg url "$URL" \
              --arg hash "${{ steps.hash.outputs.hash }}" \
              '.version=$ver | .url=$url | .hash=$hash' \
-             scoop-bucket/notes-cli.json > scoop-bucket/notes-cli.json.tmp
-          mv scoop-bucket/notes-cli.json.tmp scoop-bucket/notes-cli.json
+             notes-cli.json > notes-cli.json.tmp
+          mv notes-cli.json.tmp notes-cli.json
 
       - name: commit and push manifest
         run: |
-          cd scoop-bucket
           git config user.name "gass-git"
           git config user.email "g.szada@gmail.com"
           git add notes-cli.json
