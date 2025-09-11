@@ -38,7 +38,7 @@ jobs:
         run: |
           TAG="${{ steps.tag.outputs.tag }}"
           VERSION="${TAG#v}"
-          URL="https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/notes-cli"
+          URL="https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/notes-cli.exe"
           jq --arg ver "$VERSION" \
              --arg url "$URL" \
              --arg hash "${{ steps.hash.outputs.hash }}" \
