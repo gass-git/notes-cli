@@ -1,6 +1,6 @@
 {
-  "version": "1.0.22",
-  "url": "https://github.com/gass-git/notes-cli/releases/download/v1.0.22/notes-cli",
+  "version": "1.0.23",
+  "url": "https://github.com/gass-git/notes-cli/releases/download/v1.0.23/notes-cli.exe",
   "description": "A simple command-line tool to manage and keep track of your notes.",
   "homepage": "https://github.com/gass-git/notes-cli",
   "license": "https://spdx.org/licenses/FTL.html",
