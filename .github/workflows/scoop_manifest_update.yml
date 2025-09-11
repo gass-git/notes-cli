@@ -31,7 +31,7 @@ jobs:
       - name: calculate SHA256 hash
         id: hash
         run: |
-          HASH=$(sha256sum notes-cli | awk '{print $1}')
+          HASH=$(sha256sum notes-cli.exe | awk '{print $1}')
           echo "hash=$HASH" >> $GITHUB_OUTPUT
 
       - name: update scoop manifest
