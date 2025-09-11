@@ -8,29 +8,8 @@
   "post_install": [
     "# Create a directory to store data",
     "$path = Join-Path $env:APPDATA 'notes-cli'",
-    "if (-not (Test-Path $path)){New-Item -ItemType Directory -Path $path | Out-Null}",
-    "Write-Host 'Do you want notes-cli to open in a cmd window automatically after boot? (Y/N)' -ForegroundColor Yellow",
-    "$answer = Read-Host",
-    "if ($answer -match '^(Y|y)') {",
-    "  $startup = \"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\"",
-    "  $shortcut = Join-Path $startup 'notes-cli.lnk'",
-    "  $ws = New-Object -ComObject WScript.Shell",
-    "  $s = $ws.CreateShortcut($shortcut)",
-    "  $s.TargetPath = 'cmd.exe'",
-    "  $s.Arguments = '/k notes-cli show'",
-    "  $s.WorkingDirectory = (Get-Location).Path",
-    "  $s.Save()",
-    "  Write-Host 'Shortcut created in Startup!' -ForegroundColor Green",
-    "}"
-  ],
-  "post_uninstall": [
-    "# Removes notes-cli.lnk startup shortcut if it exists",
-    "$startupPath = \"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\"",
-    "$shortcutPath = Join-Path $startupPath 'notes-cli.lnk'",
-    "if (Test-Path $shortcutPath){",
-    "   Remove-Item $shortcutPath -Force",
-    "   Write-Host 'notes-cli automatic open on boot has been disabled' -ForegroundColor Green",
-    "}"
+    "if (-not (Test-Path $path)){ New-Item -ItemType Directory -Path $path | Out-Null }"
   ],
   "bin": "notes-cli.exe"
 }
+
