@@ -12,6 +12,7 @@ void storeNoteInFile(const char* note);
 void deleteStoredNote(char *noteNumber);
 void setFilePath(); 
 
+#ifndef NO_MAIN
 int main(int argc, char *argv[]){
     setFilePath();
 
@@ -41,6 +42,7 @@ int main(int argc, char *argv[]){
     }
 
 }
+#endif
 
 void setFilePath(){
     char* appDataPath = getenv("APPDATA");
