@@ -1,10 +1,10 @@
 {
-  "version": "1.0.25",
-  "url": "https://github.com/gass-git/notes-cli/releases/download/v1.0.25/notes-cli.exe",
+  "version": "1.1.0",
+  "url": "https://github.com/gass-git/notes-cli/releases/download/v1.1.0/notes-cli.exe",
   "description": "A simple command-line tool to manage and keep track of your notes.",
   "homepage": "https://github.com/gass-git/notes-cli",
   "license": "https://spdx.org/licenses/FTL.html",
-  "hash": "535240f05662d5efd954026c4c87fc56600b8e6ef890417f34171e0bbf8f702c",
+  "hash": "e8fe2193bc9d220907109990e85adda007fb791a7bfe2e8f0ffb36fae385bd0d",
   "post_install": [
     "# Create a directory to store data",
     "$path = Join-Path $env:APPDATA 'notes-cli'",
@@ -12,4 +12,3 @@
   ],
   "bin": "notes-cli.exe"
 }
-
