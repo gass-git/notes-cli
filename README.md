@@ -27,7 +27,7 @@ Delete note number n:
 notes-cli delete n
 ```
 
-## Dev Notes
+## 🧪 Dev Notes
 
 Run unit-tests:
 ```sh
