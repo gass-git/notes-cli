@@ -1,0 +1,23 @@
+name: unit-tests
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: install GCC
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: compile tests
+        run: gcc -o tests tests.c unity/unity.c notes.c -DNO_MAIN
+
+      - name: run tests
+        run: ./tests
