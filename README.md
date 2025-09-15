@@ -27,3 +27,10 @@ Delete note number n:
 notes-cli delete n
 ```
 
+## Dev Notes
+
+### Run Unit Tests
+
+```sh
+gcc -o tests tests.c unity/unity.c notes.c -DNO_MAIN
+```
