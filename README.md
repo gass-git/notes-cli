@@ -29,8 +29,7 @@ notes-cli delete n
 
 ## Dev Notes
 
-### Run Unit Tests
-
+Run unit-tests:
 ```sh
 gcc -o tests tests.c unity/unity.c notes.c -DNO_MAIN
 ```
