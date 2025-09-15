@@ -22,7 +22,7 @@ jobs:
       - name: Build
         run: |
           mkdir build
-          gcc src/main.c -o build/notes-cli.exe
+          gcc notes.c -o build/notes-cli.exe
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
