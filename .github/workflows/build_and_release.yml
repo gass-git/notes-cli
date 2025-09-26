@@ -1,23 +1,29 @@
 name: build-and-release
 
 on:
-  workflow_run:
-    workflows: ["unit-tests"]
-    types:
-      - completed
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-  build-and-release:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  test-and-build:
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: checkout repo
+        uses: actions/checkout@v4
 
       - name: Install MinGW
         run: choco install mingw -y
 
       - name: Add MinGW to PATH
         run: echo "C:\tools\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: compile tests
+        run: gcc -o tests tests.c unity/unity.c notes.c -DNO_MAIN
+
+      - name: run tests
+        run: ./tests
 
       - name: Build
         run: |
