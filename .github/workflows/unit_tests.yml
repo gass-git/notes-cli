@@ -3,7 +3,7 @@ name: unit-tests
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
   build-and-test:
